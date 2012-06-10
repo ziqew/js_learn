@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>Learning Advanced JavaScript</title>
+<style>
+body { background: #222; color: #FFF; font-family: Helvetica, Arial; font-size: 16px; }
+#area { position: absolute; top: 30px; left: 1%; width: 98%; }
+h3 { font-size: 24px; }
+h3.large { position: absolute; top: 45%; left: 0; width: 100%; font-size: 48px; text-align: center; }
+div.buttons { position: absolute; top: 0px; right: 5px; }
+input.run { font-weight: bold; }
+a { color: #EEE; text-decoration: none; border-bottom: 1px solid #EEE; }
+.FAIL b, .ERROR b { color: red; /* #990066 */ }
+.PASS b { color: #73C836; }
+#results { line-height: 1.3em; font-size: 18px; background: #222; z-index: 10; }
+</style>
+<script src="jquery-1.2.6.js"></script>
+
+<script>
+function assert(pass, msg){
+  var type = pass ? "PASS" : "FAIL";
+  jQuery("#results").append("<li class='" + type + "'><b>" + type + "</b> " + msg + "</li>");
+}
+function error(msg){
+  jQuery("#results").append("<li class='ERROR'><b>ERROR</b> " + msg + "</li>");
+}
+function log(){
+  var msg = "";
+  for ( var i = 0; i < arguments.length; i++ ) {
+    msg += " " + arguments[i];
+  }
+  jQuery("#results").append("<li class='LOG'><b>LOG</b> " + msg + "</li>");
+}
+</script>
+</head>
+<body>
+<h3>Learning Advanced JavaScript</h3>
+<div id="area">
+<pre id="pre" class="javascript"></pre>
+
+<div id="container">
+	<ol id="results"></ol>
+	<p id="cite">Double-click the code to edit the tutorial and try your own code.<br/>This tutorial contains code and discussion from the upcoming book <a href="http://jsninja.com/">Secrets of the JavaScript Ninja</a> by <a href="http://ejohn.org/">John Resig</a>.</p>
+</div>
+
+</div>
+</body>
+<script>
+//#88: How does a function's length property work?
+function makeNinja(name){} 
+function makeSamurai(name, rank){} 
+assert( makeNinja.length == 1, "Only expecting a single argument" ); 
+assert( makeSamurai.length == 2, "Multiple arguments expected" );
+
+//#89: We can use it to implement method overloading.
+function addMethod(object, name, fn){ 
+  // Save a reference to the old method 
+  var old = object[ name ]; 
+ 
+  // Overwrite the method with our new one 
+  object[ name ] = function(){ 
+    // Check the number of incoming arguments, 
+    // compared to our overloaded function 
+    if ( fn.length == arguments.length ) 
+      // If there was a match, run the function 
+      return fn.apply( this, arguments ); 
+ 
+    // Otherwise, fallback to the old method 
+    else if ( typeof old === "function" ) 
+      return old.apply( this, arguments ); 
+  }; 
+}
+
+//#90: How method overloading might work, using the function length property.
+
+function addMethod(object, name, fn){ 
+  // Save a reference to the old method 
+  var old = object[ name ]; 
+ 
+  // Overwrite the method with our new one 
+  object[ name ] = function(){ 
+    // Check the number of incoming arguments, 
+    // compared to our overloaded function 
+    if ( fn.length == arguments.length ) 
+      // If there was a match, run the function 
+      return fn.apply( this, arguments ); 
+ 
+    // Otherwise, fallback to the old method 
+    else if ( typeof old === "function" ) 
+      return old.apply( this, arguments ); 
+  }; 
+} 
+ 
+function Ninjas(){ 
+  var ninjas = [ "Dean Edwards", "Sam Stephenson", "Alex Russell" ]; 
+  addMethod(this, "find", function(){ 
+    return ninjas; 
+  }); 
+  addMethod(this, "find", function(name){ 
+    var ret = []; 
+    for ( var i = 0; i < ninjas.length; i++ ) 
+      if ( ninjas[i].indexOf(name) == 0 ) 
+        ret.push( ninjas[i] ); 
+    return ret; 
+  }); 
+  addMethod(this, "find", function(first, last){ 
+    var ret = []; 
+    for ( var i = 0; i < ninjas.length; i++ ) 
+      if ( ninjas[i] == (first + " " + last) ) 
+        ret.push( ninjas[i] ); 
+    return ret; 
+  }); 
+} 
+ 
+var ninjas = new Ninjas(); 
+assert( ninjas.find().length == 3, "Finds all ninjas" ); 
+assert( ninjas.find("Sam").length == 1, "Finds ninjas by first name" ); 
+assert( ninjas.find("Dean", "Edwards").length == 1, "Finds ninjas by first and last name" ); 
+assert( ninjas.find("Alex", "X", "Russell") == null, "Does nothing" );
+</script>
+</html>

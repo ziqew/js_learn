@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>Learning Advanced JavaScript</title>
+<style>
+body { background: #222; color: #FFF; font-family: Helvetica, Arial; font-size: 16px; }
+#area { position: absolute; top: 30px; left: 1%; width: 98%; }
+h3 { font-size: 24px; }
+h3.large { position: absolute; top: 45%; left: 0; width: 100%; font-size: 48px; text-align: center; }
+div.buttons { position: absolute; top: 0px; right: 5px; }
+input.run { font-weight: bold; }
+a { color: #EEE; text-decoration: none; border-bottom: 1px solid #EEE; }
+.FAIL b, .ERROR b { color: red; /* #990066 */ }
+.PASS b { color: #73C836; }
+#results { line-height: 1.3em; font-size: 18px; background: #222; z-index: 10; }
+</style>
+<script src="jquery-1.2.6.js"></script>
+
+<script>
+function assert(pass, msg){
+  var type = pass ? "PASS" : "FAIL";
+  jQuery("#results").append("<li class='" + type + "'><b>" + type + "</b> " + msg + "</li>");
+}
+function error(msg){
+  jQuery("#results").append("<li class='ERROR'><b>ERROR</b> " + msg + "</li>");
+}
+function log(){
+  var msg = "";
+  for ( var i = 0; i < arguments.length; i++ ) {
+    msg += " " + arguments[i];
+  }
+  jQuery("#results").append("<li class='LOG'><b>LOG</b> " + msg + "</li>");
+}
+</script>
+</head>
+<body>
+<h3>Learning Advanced JavaScript</h3>
+<div id="area">
+<pre id="pre" class="javascript"></pre>
+
+<div id="container">
+	<ol id="results"></ol>
+	<p id="cite">Double-click the code to edit the tutorial and try your own code.<br/>This tutorial contains code and discussion from the upcoming book <a href="http://jsninja.com/">Secrets of the JavaScript Ninja</a> by <a href="http://ejohn.org/">John Resig</a>.</p>
+</div>
+
+</div>
+</body>
+<script>
+//#80: We can also modify built-in object prototypes.
+if (!Array.prototype.forEach) { 
+  Array.prototype.forEach = function(fn){ 
+    for ( var i = 0; i < this.length; i++ ) { 
+      fn( this[i], i, this ); 
+    } 
+  }; 
+} 
+ 
+["a", "b", "c"].forEach(function(value, index, array){ 
+  assert( value, "Is in position " + index + " out of " + (array.length - 1) ); 
+});
+
+//#81: Beware: Extending prototypes can be dangerous.
+Object.prototype.keys = function(){ 
+  var keys = []; 
+  for ( var i in this ) 
+    keys.push( i ); 
+  return keys; 
+}; 
+ 
+var obj = { a: 1, b: 2, c: 3 }; 
+ 
+assert( obj.keys().length == 3, "We should only have 3 properties." ); 
+ 
+delete Object.prototype.keys;
+</script>
+</html>
