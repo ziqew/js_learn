@@ -1,0 +1,107 @@
+<html>
+<head>
+<title>Learning Advanced JavaScript</title>
+<style>
+body { background: #222; color: #FFF; font-family: Helvetica, Arial; font-size: 16px; }
+#area { position: absolute; top: 30px; left: 1%; width: 98%; }
+h3 { font-size: 24px; }
+h3.large { position: absolute; top: 45%; left: 0; width: 100%; font-size: 48px; text-align: center; }
+div.buttons { position: absolute; top: 0px; right: 5px; }
+input.run { font-weight: bold; }
+a { color: #EEE; text-decoration: none; border-bottom: 1px solid #EEE; }
+.FAIL b, .ERROR b { color: red; /* #990066 */ }
+.PASS b { color: #73C836; }
+#results { line-height: 1.3em; font-size: 18px; background: #222; z-index: 10; }
+</style>
+<script src="jquery-1.2.6.js"></script>
+
+<script>
+function assert(pass, msg){
+  var type = pass ? "PASS" : "FAIL";
+  jQuery("#results").append("<li class='" + type + "'><b>" + type + "</b> " + msg + "</li>");
+}
+function error(msg){
+  jQuery("#results").append("<li class='ERROR'><b>ERROR</b> " + msg + "</li>");
+}
+function log(){
+  var msg = "";
+  for ( var i = 0; i < arguments.length; i++ ) {
+    msg += " " + arguments[i];
+  }
+  jQuery("#results").append("<li class='LOG'><b>LOG</b> " + msg + "</li>");
+}
+</script>
+</head>
+<body>
+<h3>Learning Advanced JavaScript</h3>
+<div id="area">
+<pre id="pre" class="javascript"></pre>
+
+<div id="container">
+	<ol id="results"></ol>
+	<p id="cite">Double-click the code to edit the tutorial and try your own code.<br/>This tutorial contains code and discussion from the upcoming book <a href="http://jsninja.com/">Secrets of the JavaScript Ninja</a> by <a href="http://ejohn.org/">John Resig</a>.</p>
+</div>
+
+</div>
+</body>
+<script>
+//#10: We can refer to a function, within itself, by its name.
+function yell(n){ 
+  return n > 0 ? yell(n-1) + "a" : "hiy"; 
+} 
+assert( yell(4) == "hiyaaaa", "Calling the function by itself comes naturally." );
+
+//#11: What is the name of a function?
+var ninja = function myNinja(){ 
+  assert( ninja == myNinja, "This function is named two things - at once!" ); 
+}; 
+ninja(); 
+assert( typeof myNinja == "undefined", "But myNinja isn't defined outside of the function." ); 
+log( ninja );
+
+//#12: We can even do it if we're an anonymous function that's an object property.
+var ninja = { 
+  yell: function(n){ 
+    return n > 0 ? ninja.yell(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "A single object isn't too bad, either." );
+
+//#13: But what happens when we remove the original object?
+var ninja = { 
+  yell: function(n){ 
+    return n > 0 ? ninja.yell(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "A single object isn't too bad, either." ); 
+ 
+var samurai = { yell: ninja.yell }; 
+var ninja = null; 
+ 
+try { 
+  samurai.yell(4); 
+} catch(e){ 
+  assert( false, "Uh, this isn't good! Where'd ninja.yell go?" ); 
+}
+
+//#14: Let's give the anonymous function a name!
+var ninja = { 
+  yell: function yell(n){ 
+    return n > 0 ? yell(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "Works as we would expect it to!" ); 
+ 
+var samurai = { yell: ninja.yell }; 
+var ninja = {}; 
+assert( samurai.yell(4) == "hiyaaaa", "The method correctly calls itself." );
+
+//#15: What if we don't want to give the function a name?
+var ninja = { 
+  yell: function(n){ 
+    return n > 0 ? arguments.callee(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "arguments.callee is the function itself." );
+</script>
+</html>

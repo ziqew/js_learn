@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>Learning Advanced JavaScript</title>
+<style>
+body { background: #222; color: #FFF; font-family: Helvetica, Arial; font-size: 16px; }
+#area { position: absolute; top: 30px; left: 1%; width: 98%; }
+h3 { font-size: 24px; }
+h3.large { position: absolute; top: 45%; left: 0; width: 100%; font-size: 48px; text-align: center; }
+div.buttons { position: absolute; top: 0px; right: 5px; }
+input.run { font-weight: bold; }
+a { color: #EEE; text-decoration: none; border-bottom: 1px solid #EEE; }
+.FAIL b, .ERROR b { color: red; /* #990066 */ }
+.PASS b { color: #73C836; }
+#results { line-height: 1.3em; font-size: 18px; background: #222; z-index: 10; }
+</style>
+<script src="jquery-1.2.6.js"></script>
+
+<script>
+function assert(pass, msg){
+  var type = pass ? "PASS" : "FAIL";
+  jQuery("#results").append("<li class='" + type + "'><b>" + type + "</b> " + msg + "</li>");
+}
+function error(msg){
+  jQuery("#results").append("<li class='ERROR'><b>ERROR</b> " + msg + "</li>");
+}
+function log(){
+  var msg = "";
+  for ( var i = 0; i < arguments.length; i++ ) {
+    msg += " " + arguments[i];
+  }
+  jQuery("#results").append("<li class='LOG'><b>LOG</b> " + msg + "</li>");
+}
+</script>
+</head>
+<body>
+<h3>Learning Advanced JavaScript</h3>
+<div id="area">
+<pre id="pre" class="javascript"></pre>
+
+<div id="container">
+	<ol id="results"></ol>
+	<p id="cite">Double-click the code to edit the tutorial and try your own code.<br/>This tutorial contains code and discussion from the upcoming book <a href="http://jsninja.com/">Secrets of the JavaScript Ninja</a> by <a href="http://ejohn.org/">John Resig</a>.</p>
+</div>
+
+</div>
+</body>
+<script>
+//#30: What does the new operator do?
+function Ninja(){ 
+  this.name = "Ninja"; 
+} 
+ 
+var ninjaA = Ninja(); 
+assert( !ninjaA, "Is undefined, not an instance of Ninja." ); 
+ 
+var ninjaB = new Ninja(); 
+assert( ninjaB.name == "Ninja", "Property exists on the ninja instance." );
+
+//#31: We have a 'this' context that is a Ninja object.
+function Ninja(){ 
+  this.swung = false; 
+   
+  // Should return true 
+  this.swingSword = function(){ 
+    this.swung = !this.swung; 
+    return this.swung; 
+  }; 
+} 
+ 
+var ninja = new Ninja(); 
+assert( ninja.swingSword(), "Calling the instance method." ); 
+assert( ninja.swung, "The ninja has swung the sword." ); 
+ 
+var ninjaB = new Ninja(); 
+assert( !ninjaB.swung, "Make sure that the ninja has not swung his sword." );
+
+//#33: Add a new property and method to the object.
+function Ninja(name){ 
+  this.changeName = function(name){ 
+    this.name = name; 
+  }; 
+ 
+  this.changeName( name ); 
+} 
+ 
+var ninja = new Ninja("John"); 
+assert( ninja.name == "John", "The name has been set on initialization" ); 
+ 
+ninja.changeName("Bob"); 
+assert( ninja.name == "Bob", "The name was successfully changed." );
+
+//#34: What happens when we forget to use the new operator?
+function User(first, last){ 
+  this.name = first + " " + last; 
+} 
+ 
+var user = User("John", "Resig"); 
+assert( typeof user == "undefined", "Since new wasn't used, the instance is undefined." );
+
+//#35: What happens when we forget to use the new operator? (cont.)
+function User(first, last){ 
+  this.name = first + " " + last; 
+} 
+ 
+window.name = "Resig"; 
+var user = User("John", name); 
+ 
+assert( name == "John Resig", "The name variable is accidentally overridden." );
+
+//#36: We need to make sure that the new operator is always used.
+function User(first, last){ 
+  if ( !(this instanceof User) ) 
+    return new User(first, last); 
+   
+  this.name = first + " " + last; 
+} 
+ 
+var name = "Resig"; 
+var user = User("John", name); 
+ 
+assert( user, "This was defined correctly, even if it was by mistake." ); 
+assert( name == "Resig", "The right name was maintained." );
+
+//#38: A solution using arguments.callee.
+function User(first, last){ 
+  if ( !(this instanceof arguments.callee) ) 
+    return new User(first, last); 
+   
+  this.name = first + " " + last; 
+} 
+ 
+var name = "Resig"; 
+var user = User("John", name); 
+ 
+assert( user, "This was defined correctly, even if it was by mistake." ); 
+assert( name == "Resig", "The right name was maintained." );
+</script>
+</html>

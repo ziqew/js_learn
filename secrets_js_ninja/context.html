@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>Learning Advanced JavaScript</title>
+<style>
+body { background: #222; color: #FFF; font-family: Helvetica, Arial; font-size: 16px; }
+#area { position: absolute; top: 30px; left: 1%; width: 98%; }
+h3 { font-size: 24px; }
+h3.large { position: absolute; top: 45%; left: 0; width: 100%; font-size: 48px; text-align: center; }
+div.buttons { position: absolute; top: 0px; right: 5px; }
+input.run { font-weight: bold; }
+a { color: #EEE; text-decoration: none; border-bottom: 1px solid #EEE; }
+.FAIL b, .ERROR b { color: red; /* #990066 */ }
+.PASS b { color: #73C836; }
+#results { line-height: 1.3em; font-size: 18px; background: #222; z-index: 10; }
+</style>
+<script src="jquery-1.2.6.js"></script>
+
+<script>
+function assert(pass, msg){
+  var type = pass ? "PASS" : "FAIL";
+  jQuery("#results").append("<li class='" + type + "'><b>" + type + "</b> " + msg + "</li>");
+}
+function error(msg){
+  jQuery("#results").append("<li class='ERROR'><b>ERROR</b> " + msg + "</li>");
+}
+function log(){
+  var msg = "";
+  for ( var i = 0; i < arguments.length; i++ ) {
+    msg += " " + arguments[i];
+  }
+  jQuery("#results").append("<li class='LOG'><b>LOG</b> " + msg + "</li>");
+}
+</script>
+</head>
+<body>
+<h3>Learning Advanced JavaScript</h3>
+<div id="area">
+<pre id="pre" class="javascript"></pre>
+
+<div id="container">
+	<ol id="results"></ol>
+	<p id="cite">Double-click the code to edit the tutorial and try your own code.<br/>This tutorial contains code and discussion from the upcoming book <a href="http://jsninja.com/">Secrets of the JavaScript Ninja</a> by <a href="http://ejohn.org/">John Resig</a>.</p>
+</div>
+
+</div>
+</body>
+<script>
+//#23: What happens if a function is an object property?
+var katana = {
+  isSharp: true,
+  use: function(){
+    this.isSharp = !this.isSharp;
+  }
+};
+katana.use();
+assert( !katana.isSharp, "Verify the value of isSharp has been changed." );
+
+//#24: What exactly does context represent?
+
+function katana(){ 
+  this.isSharp = true; 
+} 
+katana(); 
+assert( isSharp === true, "A global object now exists with that name and value." ); 
+ 
+var shuriken = { 
+  toss: function(){ 
+    this.isSharp = true; 
+  } 
+}; 
+shuriken.toss(); 
+assert( shuriken.isSharp === true, "When it's an object property, the value is set within the object." );
+
+//#25: How can we change the context of a function?
+
+var object = {}; 
+function fn(){ 
+  return this; 
+} 
+assert( fn() == this, "The context is the global object." ); 
+assert( fn.call(object) == object, "The context is changed to a specific object." );
+
+//#26: Different ways of changing the context:
+function add(a, b){ 
+  return a + b; 
+} 
+assert( add.call(this, 1, 2) == 3, ".call() takes individual arguments" ); 
+assert( add.apply(this, [1, 2]) == 3, ".apply() takes an array of arguments" );
+
+//#28: A possible solution for function looping:
+function loop(array, fn){ 
+  for ( var i = 0; i < array.length; i++ ) 
+    fn.call( array, array[i], i ); 
+} 
+var num = 0; 
+loop([0, 1, 2], function(value, i){ 
+  assert(value == num++, "Make sure the contents are as we expect it."); 
+  assert(this instanceof Array, "The context should be the full array."); 
+});
+
+
+</script>
+</html>
