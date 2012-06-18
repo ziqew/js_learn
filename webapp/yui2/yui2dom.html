@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="assets/yui.css" >
+    <link rel="stylesheet" type="text/css" href="logger/assets/skins/sam/logger.css" />
+    <link rel="stylesheet" type="text/css" href="fonts/fonts.css" />
+    <link rel="stylesheet" type="text/css" href="yuitest/assets/skins/sam/yuitest.css" />
+    <style>
+            /*Supplemental CSS for the YUI distribution*/
+        #custom-doc { width: 95%; min-width: 950px; }
+        #pagetitle {background-image: url(assets/bg_hd.gif);}
+    </style>
+
+    <!--Script and CSS includes for YUI dependencies on this page-->
+    <script type="text/javascript" src="yuiloader/yuiloader.js"></script>
+    <script type="text/javascript" src="dom/dom.js"></script>
+    <script type="text/javascript" src="event/event.js"></script>
+    <script type="text/javascript" src="logger/logger.js"></script>
+    <script type="text/javascript" src="yuitest/yuitest.js"></script>
+
+    <script type="text/javascript">
+        //enable passthrough of errors from YUI Event:
+        if ((typeof YAHOO !== "undefined") && (YAHOO.util) && (YAHOO.util.Event)) {
+            YAHOO.util.Event.throwErrors = true;
+        }
+    </script>
+</head>
+<body class="yui-skin-sam">
+<div id="bd">
+    <div id="yui-main">
+        <div class="yui-b">
+            <div class="yui-ge">
+                <div class="yui-u first example">
+
+
+                    <div class="promo">
+                        <h1>Event Utility: Using Custom Events</h1>
+
+                        <div class="exampleIntro">
+                            <p>Clicking in the grey box resizes the blue <code>&lt;div&gt;</code> within it. We consider this an "interesting moment" in our script, so we create a <a href="/yui/event/#customevent">Custom Event</a> called <code>onSizeChange</code> that fires whenever the blue box is resized. This Custom Event, when fired, publishes the blue box's new size. <strong>Note:</strong> <code>onSizeChange</code> isn't a DOM event &mdash; it's an arbitrary "custom" event that has meaning in the context of our script, and an event that we think other scripts on the page might be interested in knowing about.</p>
+
+                            <p>One subscriber to our <code>onSizeChange</code> Custom Event looks at the new width and resizes the brown box to match. A second subscriber looks at the blue <code>&lt;div&gt;</code>'s new height and resizes the red box to match. </p>
+                        </div>
+
+                        <div class="example-container module ">
+                            <div class="hd exampleHd">
+                                <p class="newWindowButton yui-skin-sam"><!--<span id="newWindowLinkx"><span class="first-child">--><a href="custom-event_clean.html" target="_blank">View example in new window.</a><!--</span></span>-->
+                            </div>
+                            <div id="example-canvas" class="bd">
+
+
+                                <!--BEGIN SOURCE CODE FOR EXAMPLE =============================== -->
+
+                                <div id="container">
+                                    <div id="resizer">
+                                        Click anywhere within the grey box
+                                        to resize me.
+                                    </div>
+                                </div>
+                                <div id="subscriberWidth">
+                                    <strong>Width will resize to match blue
+                                        box.</strong>
+                                </div>
+                                <div id="subscriberHeight">
+                                    <strong>Height will resize to match blue
+                                        box.</strong>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="yui-u">
+                    <div id="loggerModule" class="yui-skin-sam">
+                        <h3 class="firstContent">YUI Logger Output:</h3>
+                        <div id="loggerDiv"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    YAHOO.namespace("yui.examples.dom");
+
+
+
+
+    YAHOO.util.Event.onDOMReady(function (){
+        //create the logger
+        //Only instantiate logger stuff if the page has loaded in logger mode:
+        if((YAHOO.widget.LogReader)&&(YAHOO.util.Dom.get("loggerDiv"))) {
+            //Create Logger instance for example page:
+            YAHOO.yui.examples.exampleLogger = new YAHOO.widget.LogReader("loggerDiv");
+
+            //Logger comes up a bit more cleanly if its container has an approximate
+            //height and is visibility:hidden intil after init;
+            YAHOO.yui.examples.loggerInit = function() {
+                YAHOO.util.Dom.setStyle("loggerDiv", "height", "auto");
+                YAHOO.util.Dom.setStyle("loggerDiv", "visibility", "visible");
+            }
+            YAHOO.util.Event.onDOMReady(YAHOO.yui.examples.loggerInit);
+        }
+        // #test: Find the element with an id of 'test' and store it in a variable
+        var element = YAHOO.util.Dom.get('container');
+
+        // .test: Get all elements with class 'test' (will be an array if there's more than one)
+        var elements = YAHOO.util.Dom.getElementsByClassName('container');
+
+        // div.test: Get all divs with class 'test'
+        var elements = YAHOO.util.Dom.getElementsByClassName('container', 'div');
+
+        // Get the first element with class 'test'
+        //var element = YAHOO.util.Dom.getElementsByClassName('test')[0];
+
+        var pos = YAHOO.util.Dom.getXY('container');
+        YAHOO.log("xy:","info",pos);
+        YAHOO.log("test:","info",element.innerText);
+    });
+
+</script>
+</body>
+</html>
