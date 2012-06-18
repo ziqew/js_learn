@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+ ! Excerpted from "Mastering Dojo",
+ ! published by The Pragmatic Bookshelf.
+ ! Copyrights apply to this code. It may not be used to create training material,
+ ! courses, books, articles, and the like. Contact us if you are in doubt.
+ ! We make no guarantees that this code is fit for any purpose.
+ ! Visit http://www.pragmaticprogrammer.com/titles/rgdojo for more book information.
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Justa Cigar Wish List</title>
+<style type="text/css">
+    @import "../../script/dijit/themes/tundra/tundra.css";
+    @import "../../script/dojo/resources/dojo.css";
+    @import "../../script/dojox/grid/resources/tundraGrid.css";
+</style>
+<script type="text/javascript" src="../../script/dojo/dojo.js"  djConfig="parseOnLoad: true"></script>
+<script>
+    dojo.require("dojo.parser");
+    dojo.require("dojo.string");
+    dojo.require("dojo.data.ItemFileReadStore");
+    dojo.require("dojox.grid.DataGrid");
+    dojo.require("dojox.grid.LazyTreeGridStoreModel");
+    dojo.require("dojo.io.script");
+
+
+    // Share this error function
+    function commonError(text) {
+      alert("An error has occurred.");
+      return text;
+    }
+
+
+
+    function getRating(searchTerms) {
+        dojo.xhrGet({
+         // URL for our proxy that calls the rating service
+         url: "ratings.xml",
+         content: { query: searchTerms },
+         timeout: 10000,
+
+         // Set this to parse response into XML
+         handleAs: "xml",
+
+         // Function run when web service returns with the answer
+         load: function(ratingResult) {
+            // Make an object out of the dynamic data for substitute.
+            var reviewObj = { name: searchTerms };
+
+            var ratingNodes = ratingResult.getElementsByTagName("numerical");
+            reviewObj.numerical = ratingNodes[0].firstChild.nodeValue;
+
+            var reviewNodes = ratingResult.getElementsByTagName("descriptive");
+            reviewObj.descriptive = reviewNodes[0].firstChild.nodeValue;
+
+            var reviewPara = document.getElementById("ratingP");
+            reviewPara.innerHTML =
+                dojo.string.substitute(
+                    "<b>${name}</b>: ${numerical} stars<br/>${descriptive}",
+                    reviewObj
+                );
+         },
+
+        error: commonError
+     });
+   }
+
+</script>
+<style>
+
+#grid {
+    border: 1px solid #333;
+    width: 550px;
+    margin: 10px;
+    height: 200px;
+    font-size: 0.9em;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+
+}
+
+</style>
+
+</head>
+<body class="tundra">
+
+<h1>Justa Cigar Corporation</h1>
+<h3>"Sometimes a cigar is a Justa Cigar!"</h3>
+
+    <div dojoType="dojo.data.ItemFileReadStore"
+        jsId="wishStore" url="cigar_wish_list.json">
+    </div>
+
+    <table id="grid" dojoType="dojox.grid.DataGrid" store="wishStore"
+         query="{ wishId: '*' }" clientSort="true">
+        <script type="dojo/connect" event="onRowClick" args="evt">
+           
+		   var searchTerms = this.getItem(evt.rowIndex).description;
+		   console.log("searchTerms:"+searchTerms);
+           //var searchTerms = this.model.getRow(evt.rowIndex).description;
+           getRating(searchTerms);
+		   console.log("after get rating.....");
+
+           dojo.io.script.get({
+               // URL for Yahoo Search
+               //need change to bing search
+               url: "http://ajax.googleapis.com/ajax/services/search/web",
+			   callbackParamName: "callback",
+               // Send search term parameters:
+               content: {
+                   v: "1.0",
+                   q: searchTerms
+               },
+				
+               load: function(searchResult) {
+			      // Zero out the current list
+                  listNode = dojo.byId("resultUl");
+                  listNode.innerHTML = "";
+				  dojo.forEach(searchResult.responseData.results, function(result) {
+				      console.dir(result); 
+                      var listItem = document.createElement("li");
+                      listItem.innerHTML =
+                         dojo.string.substitute("<a href='${url}'>${title}</a><br/>${content}", result);
+                      listNode.appendChild(listItem);
+                  });
+               },
+
+              error: commonError
+           });
+        </script>
+        <thead>
+           <tr>
+              <th field="description" width="15em">Cigar</th>
+              <th field="size">Length/Ring</th>
+              <th field="origin">Origin</th>
+              <th field="wrapper">Wrapper</th>
+              <th field="shape">Shape</th>
+           </tr>
+        </thead>
+
+    </table>
+
+
+    <p id="ratingP" style="width:550px"></p>
+    <ul id="resultUl" style="width:550px">
+
+    </ul>
+
+</body>
+</html>

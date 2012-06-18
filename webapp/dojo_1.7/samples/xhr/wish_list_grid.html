@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+         "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+ ! Excerpted from "Mastering Dojo",
+ ! published by The Pragmatic Bookshelf.
+ ! Copyrights apply to this code. It may not be used to create training material,
+ ! courses, books, articles, and the like. Contact us if you are in doubt.
+ ! We make no guarantees that this code is fit for any purpose.
+ ! Visit http://www.pragmaticprogrammer.com/titles/rgdojo for more book information.
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Justa Cigar Wish List</title>
+<style type="text/css">
+    @import "../../script/dijit/themes/tundra/tundra.css";
+    @import "../../script/dojo/resources/dojo.css";
+    @import "../../script/dojox/grid/resources/tundraGrid.css";
+</style>
+<script type="text/javascript" src="../../script/dojo/dojo.js"
+    djConfig="parseOnLoad: true"></script>
+<script>
+    dojo.require("dojo.parser");
+    dojo.require("dojo.data.ItemFileReadStore");
+    dojo.require("dojox.grid.DataGrid");
+
+</script>
+<style>
+
+#grid {
+    border: 1px solid #333;
+    width: 550px;
+    margin: 10px;
+    height: 200px;
+    font-size: 0.9em;
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+
+}
+
+</style>
+
+</head>
+<body class="tundra">
+
+<h1>Justa Cigar Corporation</h1>
+<h3>"Sometimes a cigar is a Justa Cigar!"</h3>
+
+
+    <div dojoType="dojo.data.ItemFileReadStore"
+        jsId="wishStore" url="cigar_wish_list.json">
+    </div>
+
+
+
+    <table id="grid" dojoType="dojox.grid.DataGrid" store="wishStore"
+         query="{ wishId: '*' }" clientSort="true">
+        <thead>
+           <tr>
+              <th field="description" width="15em">Cigar</th>
+              <th field="size">Length/Ring</th>
+              <th field="origin">Origin</th>
+              <th field="wrapper">Wrapper</th>
+              <th field="shape">Shape</th>
+           </tr>
+        </thead>
+    </table>
+
+
+</body>
+</html>

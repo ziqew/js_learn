@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"></script>-->
+    <script type="text/javascript" src="../script/dojo/dojo.js.uncompressed.js"></script>
+    <script>
+        dojo.require("dojo.fx");
+        dojo.ready(function() {
+            //alert("Dojo version " + dojo.version + " is loaded");
+            dojo.byId("greeting").innerHTML += ", from " + dojo.version;
+
+            // Now, slide the greeting
+            dojo.fx.slideTo({
+                top: 100,
+                left: 200,
+                node: dojo.byId("greeting")
+            }).play();
+        });
+    </script>
+</head>
+<body>
+<h1 id="greeting">Hello</h1>
+</body>
+</html>
