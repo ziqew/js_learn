@@ -1,0 +1,130 @@
+<html>
+<head>
+</head>
+<body id='b1'>
+<div id="loader"></div>
+</body>
+<script>
+
+
+var Bar=function(selector){
+    return new Bar.fn.init(selector);
+}
+
+o=Bar.fn=Bar.prototype={
+        init:function(selector){
+            //this[0]=selector;
+            this.context=selector;
+            //this.length = 1;
+            return this;
+        },
+        echo:function(){
+            console.log("inside echo:"+this.length);
+        },
+        length: 0,
+        splice: [].splice
+};
+
+
+
+Bar.fn.init.prototype = Bar.fn;
+var bar=Bar(document);
+
+
+var o1 = new Object(1);
+o1['prop1']='bala';
+o1['prop2']='balabala';
+var o2 = new Object(null);
+var o3 = {
+    //length:0,
+    len:0,
+    name:"123" ,
+    splice: [].splice
+
+};
+var oarr = [];
+oarr.push(o1);
+oarr.push(o2);
+oarr.push(o3);
+
+console.log("typeof:"+typeof oarr);
+console.log("typeof:"+typeof o1);
+console.log("typeof:"+typeof o2);
+console.log("typeof:"+typeof o3);
+
+var f1=function () {};
+var f2=function (a) {};
+var f3=function (a, b) {};
+console.log(f1.length);  /* 0 */
+console.log(f2.length); /* 1 */
+console.log(f3.length); /* 2 etc. */
+
+
+if(oarr instanceof Array){
+    console.log("oarr is an Array");
+}
+
+if(o1 instanceof Object){
+    console.log("o1 is an Object");
+}
+
+if(o2 instanceof Object){
+    console.log("o2 is an Object");
+}
+
+if(o3 instanceof Object){
+    console.log("o3 is an Object");
+}
+
+if(o instanceof Object){
+    console.log("o is an Object");
+}
+
+if(bar instanceof Object){
+    console.log("bar is an Object");
+}
+
+var adder = new Function("a", "b", "return a + b");
+
+console.log("arr length:"+oarr.length);
+console.log('voo length:'+o.length);
+o.echo();
+console.log("bar length:"+bar.length);
+console.log("finished.....");
+/*
+var Fo=function(selector,context){
+                //return new Fo.prototype.init(selector);
+                return new Fo.fn.init(selector,context,rootFo);
+            },rootFo,
+            toString = Object.prototype.toString,
+            hasOwn = Object.prototype.hasOwnProperty,
+            push = Array.prototype.push,
+            slice = Array.prototype.slice,
+            trim = String.prototype.trim,
+            indexOf = Array.prototype.indexOf;
+    Fo.fn = Fo.prototype ={
+        constructor: Fo,
+        init:function( selector, context, rootFo) {
+            this.context = this[0] = selector;
+            this.length = 1;
+            return this;
+        },
+        // Start with an empty selector
+        selector: "",
+
+        // The current version of jQuery being used
+        fo: "1.6.4",
+
+        // The default length of a jQuery object is 0
+        length: 0,
+        splice: [].splice
+
+    };
+    Fo.fn.init.prototype = Fo.fn;
+    rootFo = Fo(document);
+
+
+*/
+
+</script>
+</html>
