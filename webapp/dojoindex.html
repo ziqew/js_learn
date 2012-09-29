@@ -1,0 +1,81 @@
+<html>
+<link rel="stylesheet" href="dojo_1.8/dijit/themes/claro/claro.css" media="screen">
+<script>
+    // Instead of using data-dojo-config, we’re creating a dojoConfig
+    // object *before* we load dojo.js; they’re functionally identical,
+    // it's just easier to read this approach with a larger configuration.
+    var dojoConfig = {
+        async: true,
+        // This code registers the correct location of the "demo"
+        // package so we can load Dojo from the CDN whilst still
+        // being able to load local modules
+        packages: [{
+            name: "demo",
+            location: location.pathname.replace(/\/[^/]+$/, '')
+        }]
+    };
+</script>
+<body class="claro">
+
+
+<h1 id="greeting">Hello</h1>
+<h1>Demo: button</h1>
+    <button id="button1" type="button">Button1</button>
+    <button id="button2" data-dojo-type="dijit/form/Button" type="button">Button2</button>
+    <button id="button3" data-dojo-type="dijit/form/Button" type="button">
+        <span>Button4</span>
+        <script type="dojo/on" data-dojo-event="click">
+            console.log("I was clicked");
+        </script>
+    </button>
+<!-- load Dojo -->
+<!--
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8/dojo/dojo.js" data-dojo-config="async: true"></script>-->
+<script src="dojo_1.8/dojo/dojo.js.uncompressed.js" data-dojo-config="isDebug:true,async: true"></script>
+
+
+<script>
+     /*
+     require(["demo/myModule"], function(myModule){
+
+     myModule.setText("greeting", "Hello Dojo!");
+
+
+     setTimeout(function(){
+     myModule.restoreText("greeting");
+     }, 3000);
+     });*/
+</script>
+
+<script>
+    /*
+    require(["dojo/dom", "dojo/fx", "dojo/domReady!"], function(dom, fx){
+
+        var greeting = dom.byId("greeting");
+        greeting.innerHTML += " from Dojo!";
+
+        fx.slideTo({
+            top: 100,
+            left: 200,
+            node: greeting
+        }).play();
+    }); */
+</script>
+
+<script>
+    require(["dojo/dom", "dojo/on", "dojo/parser", "dojo/ready", "dijit/registry", "dijit/form/Button"],
+            function(dom, on, parser, ready, registry){
+                var myClick = function(evt){
+                    console.log("I was clicked");
+                };
+
+                ready(function(){
+                    parser.parse();
+
+                    on(dom.byId("button1"), "click", myClick);
+                    on(registry.byId("button2"), "click", myClick);
+                });
+            });
+</script>
+</body>
+</html>
