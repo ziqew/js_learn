@@ -31,7 +31,7 @@
 <!-- load Dojo -->
 <!--
 <script src="//ajax.googleapis.com/ajax/libs/dojo/1.8/dojo/dojo.js" data-dojo-config="async: true"></script>-->
-<script src="dojo_1.8/dojo/dojo.js.uncompressed.js" data-dojo-config="isDebug:true,async: true"></script>
+<script src="dojo_1.8/dojo/dojo.js" data-dojo-config="isDebug:true,async: true"></script>
 
 
 <script>
@@ -77,5 +77,16 @@
                 });
             });
 </script>
+
+<button data-dojo-type="dijit/form/Button" type="button">
+  <span>Click</span>
+  <script type="dojo/on" data-dojo-event="click" data-dojo-args="e">
+    console.log("I was clicked!", e);
+    this.set("label", "Clicked!");
+  </script>
+  <script type="dojo/watch" data-dojo-prop="label" data-dojo-args="prop, oldValue, newValue">
+    console.log("button: " + prop + " changed from '" + oldValue + "' to '" + newValue + "'");
+  </script>
+</button>
 </body>
 </html>
